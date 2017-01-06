@@ -299,7 +299,7 @@ reserved_ids = [
 
 -- Curry
  ( "free",      (KW_Free,       Just (Any [FreeVars])) ),
- ( "fcase",     (KW_Fcase,      Just (Any [FlexibleCase])) )
+ ( "fcase",     (KW_FCase,      Just (Any [FlexibleCase])) )
  ]
 
 

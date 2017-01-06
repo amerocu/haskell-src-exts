@@ -223,7 +223,7 @@ Reserved Ids
 >       'as'            { Loc $$ KW_As }
 >       'by'            { Loc $$ KW_By }       -- transform list comprehensions
 >       'case'          { Loc $$ KW_Case }
->       'fcase'         { Loc $$ KW_Fcase }    -- Curry
+>       'fcase'         { Loc $$ KW_FCase }    -- Curry
 >       'free'          { Loc $$ KW_Free }     -- Curry
 >       'class'         { Loc $$ KW_Class }
 >       'data'          { Loc $$ KW_Data }
@@ -756,7 +756,7 @@ Parsing the body of a closed type family, partially stolen from the source of GH
 >       | valdef                        { $1 }
 >       | pat_syn                       { $1 }
 >       | pattern_synonym_sig           { $1 }
->       | freevarsdecl  {- Curry -}     { $1 }
+>       | freevarsdecl                  { $1 }
 
 > freevarsdecl :: { Decl L }
 >       : exp0b 'free'                  {% do { v <- checkSigVar $1;
@@ -1405,8 +1405,8 @@ mdo blocks require the RecursiveDo extension enabled, but the lexer handles that
 >                                               let { (als, inf, ss) = $3 } ;
 >                                               return (LCase (nIS $1 <++> inf <** ($1:$2:ss)) als) } }
 >       | 'fcase' exp 'of' altslist     {% do { checkEnabled FlexibleCase ;
-                                                let {(als, inf, ss)} = $4 ;
-                                                return (Fcase (nIS $1 <++> inf <** ($1:$3:ss)) $2 als) } }
+>                                               let { (als, inf, ss) = $4 } ;
+>                                               return (FCase (nIS $1 <++> inf <** ($1:$3:ss)) $2 als) } }
 >       | '-' fexp                      { NegApp (nIS $1 <++> ann $2 <** [$1]) $2 }
 >       | 'do'  stmtlist                { let (sts, inf, ss) = $2 in Do   (nIS $1 <++> inf <** $1:ss) sts }
 >       | 'mdo' stmtlist                { let (sts, inf, ss) = $2 in MDo  (nIS $1 <++> inf <** $1:ss) sts }

@@ -1020,7 +1020,7 @@ instance  Pretty (Exp l) where
         prettyPrec _ (VarQuote _ x)  = text "\'" <> pretty x
         prettyPrec _ (QuasiQuote _ n qt) = text ("[" ++ n ++ "|" ++ qt ++ "|]")
         --Curry
-        prettyPrec p (Fcase _ cond altList) = parensIf (p > 1) $
+        prettyPrec p (FCase _ cond altList) = parensIf (p > 1) $
                 myFsep [text "fcase", pretty cond, text "of"]
                 $$$ ppBody caseIndent (map pretty altList)
         -- Hsx
@@ -1510,7 +1510,7 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
         pretty (P.Case _ cond altList) =
                 myFsep [text "case", pretty cond, text "of"]
                 $$$ ppBody caseIndent (map pretty altList)
-        pretty (P.Fcase _ cond altList) =
+        pretty (P.FCase _ cond altList) =
                 myFsep [text "fcase", pretty cond, text "of"]
                 $$$ ppBody caseIndent (map pretty altList)
         pretty (P.Do _ stmtList) =

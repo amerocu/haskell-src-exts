@@ -689,10 +689,10 @@ checkExpr e' = case e' of
                      return (S.ExpTypeSig loc e1 ty)
 
     --Curry
-    Fcase l e alts  -> do
-                     checkEnabled Fcase
+    FCase l e alts  -> do
+                     checkEnabled FlexibleCase
                      e1 <- checkExpr e
-                     return (S.Fcase l e1 alts)
+                     return (S.FCase l e1 alts)
 
     --Template Haskell
     BracketExp l e        -> return $ S.BracketExp l e

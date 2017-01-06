@@ -796,7 +796,7 @@ data Exp l
     | ExprHole l                            -- ^ Expression hole
 
 -- Curry
-    | Fcase            l (Exp l) [Alt l]    -- ^ @fcase@ /exp/ @of@ /alts/
+    | FCase            l (Exp l) [Alt l]    -- ^ @fcase@ /exp/ @of@ /alts/
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | The name of an xml element or attribute,
@@ -1695,7 +1695,7 @@ instance Annotated Exp where
         MultiIf l alts -> MultiIf (f l) alts
         ExprHole l      -> ExprHole (f l)
 
-        Fcase            l e alts -> Fcase (f l) e alts
+        FCase            l e alts -> FCase (f l) e alts
 
 instance Annotated XName where
     ann (XName l _)      = l

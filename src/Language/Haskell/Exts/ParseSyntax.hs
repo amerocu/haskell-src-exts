@@ -105,7 +105,7 @@ data PExp l
     | LCase l [Alt l]                       -- ^ @\case@ /alts/
     | TypeApp l (S.Type l)
 -- Curry
-    | Fcase l (PExp l) [Alt l]              -- ^ @fcase@ /exp/ @of@ /alts/
+    | FCase l (PExp l) [Alt l]              -- ^ @fcase@ /exp/ @of@ /alts/
    deriving (Eq,Show,Functor)
 
 data PFieldUpdate l
@@ -131,7 +131,7 @@ instance Annotated PExp where
         Let l _ _               -> l
         If l _ _ _              -> l
         Case l _ _              -> l
-        Fcase l _ _             -> l
+        FCase l _ _             -> l
         Do l _                  -> l
         MDo l _                 -> l
         TupleSection l _ _      -> l
@@ -202,7 +202,7 @@ instance Annotated PExp where
         Let l bs e              -> Let (f l) bs e
         If l ec et ee           -> If (f l) ec et ee
         Case l e alts           -> Case (f l) e alts
-        Fcase l e alts          -> Fcase (f l) e alts
+        FCase l e alts          -> FCase (f l) e alts
         Do l ss                 -> Do (f l) ss
         MDo l ss                -> MDo (f l) ss
         TupleSection l bx mes   -> TupleSection (f l) bx mes
