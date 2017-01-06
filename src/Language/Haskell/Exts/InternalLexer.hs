@@ -208,6 +208,10 @@ data Token
         | KW_JavaScript
         | KW_CApi
 
+-- Curry
+        | KW_Free
+        | KW_FCase
+
         | EOF
         deriving (Eq,Show)
 
@@ -291,7 +295,11 @@ reserved_ids = [
  ( "pattern",   (KW_Pattern,    Just (Any [PatternSynonyms]))),
 
 -- FFI
- ( "foreign",   (KW_Foreign,    Just (Any [ForeignFunctionInterface])) )
+ ( "foreign",   (KW_Foreign,    Just (Any [ForeignFunctionInterface])) ),
+
+-- Curry
+ ( "free",      (KW_Free,       Just (Any [FreeVars])) ),
+ ( "fcase",     (KW_Fcase,      Just (Any [FlexibleCase])) )
  ]
 
 
@@ -1425,5 +1433,8 @@ showToken t = case t of
   KW_CApi       -> "capi"
   KW_Role       -> "role"
   KW_Pattern    -> "pattern"
+  -- Curry
+  KW_FCase      -> "fcase"
+  KW_Free       -> "free"
 
   EOF           -> "EOF"

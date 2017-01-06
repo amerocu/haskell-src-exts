@@ -310,6 +310,8 @@ data Decl l
      -- ^ A foreign import declaration
      | ForExp       l (CallConv l)                    (Maybe String) (Name l) (Type l)
      -- ^ A foreign export declaration
+     | FreeVarsDecl     l [Name l]
+     -- ^ A Curry's declaration of free variables
      | RulePragmaDecl   l [Rule l]
      -- ^ A RULES pragma
      | DeprPragmaDecl   l [([Name l], String)]
@@ -792,6 +794,9 @@ data Exp l
 
 -- Holes
     | ExprHole l                            -- ^ Expression hole
+
+-- Curry
+    | Fcase            l (Exp l) [Alt l]    -- ^ @fcase@ /exp/ @of@ /alts/
   deriving (Eq,Ord,Show,Typeable,Data,Foldable,Traversable,Functor,Generic)
 
 -- | The name of an xml element or attribute,
@@ -1265,6 +1270,7 @@ instance Annotated Decl where
         MinimalPragma    l _            -> l
         RoleAnnotDecl    l _ _          -> l
         PatSyn           l _ _ _        -> l
+        FreeVarsDecl     l _            -> l
     amap f decl = case decl of
         TypeDecl     l dh t      -> TypeDecl    (f l) dh t
         TypeFamDecl  l dh mk mi  -> TypeFamDecl (f l) dh mk mi
@@ -1301,6 +1307,7 @@ instance Annotated Decl where
         MinimalPragma    l b             -> MinimalPragma (f l) b
         RoleAnnotDecl    l t rs          -> RoleAnnotDecl (f l) t rs
         PatSyn           l p r d         -> PatSyn (f l) p r d
+        FreeVarsDecl     l ns            -> FreeVarsDecl (f l) ns
 
 instance Annotated Role where
     ann r = case r of
@@ -1625,6 +1632,8 @@ instance Annotated Exp where
         LCase l _              -> l
         ExprHole l             -> l
 
+        FCase            l _ _ -> l
+
     amap f e1 = case e1 of
         Var l qn        -> Var (f l) qn
         OverloadedLabel l qn -> OverloadedLabel (f l) qn
@@ -1686,6 +1695,7 @@ instance Annotated Exp where
         MultiIf l alts -> MultiIf (f l) alts
         ExprHole l      -> ExprHole (f l)
 
+        Fcase            l e alts -> Fcase (f l) e alts
 
 instance Annotated XName where
     ann (XName l _)      = l

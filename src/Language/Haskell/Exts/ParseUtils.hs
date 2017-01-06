@@ -688,6 +688,12 @@ checkExpr e' = case e' of
                      e1 <- checkExpr e
                      return (S.ExpTypeSig loc e1 ty)
 
+    --Curry
+    Fcase l e alts  -> do
+                     checkEnabled Fcase
+                     e1 <- checkExpr e
+                     return (S.Fcase l e1 alts)
+
     --Template Haskell
     BracketExp l e        -> return $ S.BracketExp l e
     SpliceExp l e         -> return $ S.SpliceExp l e

@@ -817,6 +817,9 @@ instance ExactP Decl where
                 exactPC t
              _ -> errorEP "ExactP: Decl: ForExp is given too few srcInfoPoints"
          _ -> errorEP "ExactP: Decl: ForExp is given too few srcInfoPoints"
+    FreeVarsDecl     l ns   -> do
+            let pts = srcInfoPoints l
+            printInterleaved' (zip pts (replicate (length pts - 1) "," ++ ["free"])) ns
     RulePragmaDecl   l rs   ->
         case srcInfoPoints l of
          [_,b] -> do

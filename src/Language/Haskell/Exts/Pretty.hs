@@ -562,6 +562,10 @@ instance  Pretty (Decl l) where
                 mySep ( [text "type", text "role", pretty qn]
                         ++ map pretty rs )
 
+        pretty (FreeVarsDecl _ nameList) =
+                mySep ((punctuate comma . map pretty $ nameList)
+                      ++ [text "free"])
+
 instance Pretty (InstRule l) where
     pretty (IRule _ tvs mctxt qn)  =
             mySep [ppForall tvs
@@ -1015,6 +1019,10 @@ instance  Pretty (Exp l) where
         prettyPrec _ (TypQuote _ t)  = text "\'\'" <> pretty t
         prettyPrec _ (VarQuote _ x)  = text "\'" <> pretty x
         prettyPrec _ (QuasiQuote _ n qt) = text ("[" ++ n ++ "|" ++ qt ++ "|]")
+        --Curry
+        prettyPrec p (Fcase _ cond altList) = parensIf (p > 1) $
+                myFsep [text "fcase", pretty cond, text "of"]
+                $$$ ppBody caseIndent (map pretty altList)
         -- Hsx
         prettyPrec _ (XTag _ n attrs mattr cs) =
                 let ax = maybe [] (return . pretty) mattr
@@ -1501,6 +1509,9 @@ instance SrcInfo loc => Pretty (P.PExp loc) where
                 $$$ ppBody caseIndent (map pretty alts)
         pretty (P.Case _ cond altList) =
                 myFsep [text "case", pretty cond, text "of"]
+                $$$ ppBody caseIndent (map pretty altList)
+        pretty (P.Fcase _ cond altList) =
+                myFsep [text "fcase", pretty cond, text "of"]
                 $$$ ppBody caseIndent (map pretty altList)
         pretty (P.Do _ stmtList) =
                 text "do" $$$ ppBody doIndent (map pretty stmtList)

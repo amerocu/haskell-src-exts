@@ -98,12 +98,16 @@ data Language =
   -- definitions e.g. MonomorphismRestriction.
   | HaskellAllDisabled
 
+  -- | The Curry language defined by the Curry report.
+  -- <http://www.curry-language.org/>
+  | Curry
+
   -- | An unknown language, identified by its name.
   | UnknownLanguage String
   deriving (Show, Read, Eq, Ord, Data, Typeable)
 
 knownLanguages :: [Language]
-knownLanguages = [Haskell98, Haskell2010]
+knownLanguages = [Haskell98, Haskell2010, Curry]
 
 classifyLanguage :: String -> Language
 classifyLanguage str = fromMaybe (UnknownLanguage str) $ lookup str langTable
@@ -537,6 +541,13 @@ data KnownExtension =
   | TypeFamilyDependencies
 
   | OverloadedLabels
+
+  -- Curry
+  -- | [Curry] Allow declaration of free variables
+  | FreeVars
+
+  -- | [Curry] Allow 'fcase' expressions
+  | FlexibleCase
   deriving (Show, Read, Eq, Ord, Enum, Bounded, Data, Typeable)
 
 -- | Certain extensions imply other extensions, and this function
@@ -706,6 +717,7 @@ toExtensionList lang exts' =
                                    , EmptyDataDecls
                                    ] ++ allLangDefault
                     HaskellAllDisabled -> []
+                    Curry -> [FreeVars,FlexibleCase]
                     UnknownLanguage s ->
                         error $ "toExtensionList: Unknown language " ++ s
 {-
@@ -720,4 +732,3 @@ toExtensionList lang exts' =
           go acc (EnableExtension  x : exts) = go (x : acc)           exts
           -- We just throw away UnknownExtensions
           go acc (_ : exts) = go acc exts
-
